@@ -1,4 +1,4 @@
-package main
+package gitgrope
 
 import (
 	"fmt"
@@ -14,6 +14,7 @@ type Task struct {
 	Name       string `yaml:"name"`
 	Shell      string
 	WaitSwitch string
+	Log        *logrus.Logger
 }
 
 func (t *Task) ExecuteFor(repo *Repository, release *github.RepositoryRelease, dir, assetNameList string) bool {
@@ -33,16 +34,16 @@ func (t *Task) ExecuteFor(repo *Repository, release *github.RepositoryRelease, d
 
 	proc.Env = envs
 	proc.Dir = dir
-	proc.Stdout = log.WriterLevel(logrus.InfoLevel)
-	proc.Stderr = log.WriterLevel(logrus.ErrorLevel)
+	proc.Stdout = t.Log.WriterLevel(logrus.InfoLevel)
+	proc.Stderr = t.Log.WriterLevel(logrus.ErrorLevel)
 
 	err := proc.Run()
 	if err != nil {
 		switch e := err.(type) {
 		case *exec.ExitError:
-			log.WithError(e).Errorf("%s.%s.%s: task process exited with %d", repo.Name, release.GetName(), t.Name, e.ExitCode())
+			t.Log.WithError(e).Errorf("%s.%s.%s: task process exited with %d", repo.Name, release.GetName(), t.Name, e.ExitCode())
 		default:
-			log.WithError(e).Errorf("%s.%s.%s: task process not successful", repo.Name, release.GetName(), t.Name)
+			t.Log.WithError(e).Errorf("%s.%s.%s: task process not successful", repo.Name, release.GetName(), t.Name)
 		}
 		return false
 	}
