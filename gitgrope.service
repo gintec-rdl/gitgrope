@@ -1,5 +1,5 @@
 [Unit]
-Description=Grop it like it's hot
+Description=Grope it like it's hot
 
 [Service]
 ExecStart=/usr/sbin/gitgrope
