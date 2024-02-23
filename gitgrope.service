@@ -1,0 +1,8 @@
+[Unit]
+Description=Grop it like it's hot
+
+[Service]
+ExecStart=/usr/sbin/gitgrope
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,23 @@
+builds:
+  - main: main.go
+    id: "gitgrope"
+    binary: gitgrope
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+      - windows
+    flags:
+      - -a
+    ldflags:
+      - -s -w -X main.version=v{{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}}
+    goarch:
+      - amd64
+    hooks:
+      post: cp example.grope.yaml .grope.yaml
+archives:
+  - files:
+      - .grope.yaml
+    format: zip
+    name_template: "gitgrope{{ .Os }}_{{ .Arch }}_v{{ .Version }}"

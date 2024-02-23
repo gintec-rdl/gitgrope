@@ -19,3 +19,8 @@
 
 # Go workspace file
 go.work
+.grope.yaml
+build/
+logs/
+test/
+__debug_bin*

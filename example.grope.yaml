@@ -1,0 +1,10 @@
+access_token: ""
+log_file: "logs/gitgrope.log"
+release_dir: "releases"
+poll_seconds: 15 # seconds
+http_timeout:  30 # seconds
+# Shell to use when running tasks. Defaults to platform specific
+# *nix: /bin/sh
+# windows: cmd
+task_shell:
+repos:
