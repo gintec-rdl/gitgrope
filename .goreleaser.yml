@@ -20,4 +20,4 @@ archives:
   - files:
       - .grope.yaml
     format: zip
-    name_template: "gitgrope{{ .Os }}_{{ .Arch }}_v{{ .Version }}"
+    name_template: "gitgrope_{{ .Os }}_{{ .Arch }}_v{{ .Version }}"
