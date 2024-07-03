@@ -69,6 +69,10 @@ func main() {
 			case <-ticker.C:
 				for _, repo := range cfg.Repositories {
 					go repo.FeelAndGrope(ctx)
+					if cfg.FireOnce {
+						log.Info("stopping ticker after firing once")
+						ticker.Stop()
+					}
 				}
 			}
 		}

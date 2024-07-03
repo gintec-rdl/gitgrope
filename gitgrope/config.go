@@ -20,6 +20,7 @@ type Config struct {
 	Shell        string        `yaml:"task_shell"`
 	PollTime     TimeSeconds   `yaml:"poll_seconds"`
 	HttpTimeout  TimeSeconds   `yaml:"http_timeout"`
+	FireOnce     bool          `yaml:"fire_once"` // used for debugging only
 }
 
 func (cfg *Config) Apply(logger *logrus.Logger) error {
@@ -37,7 +38,7 @@ func (cfg *Config) Apply(logger *logrus.Logger) error {
 	}
 
 	clientFactory := func(token string) *github.Client {
-		client := github.NewClient(nil).WithAuthToken(cfg.AccessToken)
+		client := github.NewClient(nil).WithAuthToken(token)
 		client.Client().Timeout = cfg.HttpTimeout.Duration
 		return client
 	}
