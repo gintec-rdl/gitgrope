@@ -2,10 +2,13 @@ package gitgrope
 
 import (
 	"context"
+	"fmt"
 	"io"
 	"net/http"
 	"os"
 	"path"
+	"path/filepath"
+	"sort"
 	"strings"
 	"time"
 
@@ -169,5 +172,53 @@ func (r *Repository) FeelAndGrope(ctx context.Context) {
 		return
 	} else {
 		r.Log.Infof("%s.%s exists locally", r.Name, release.GetTagName())
+	}
+	// remove old files (2 stages back from current one)
+	releaseFiles, err := filepath.Glob(fmt.Sprintf("%s/*.release", r.ReleaseDirectory))
+	if err != nil {
+		r.Log.Error(errors.Wrap(err, "failed to glob old release files for cleaning"))
+		return
+	}
+	filteredFiles := []os.FileInfo{}
+
+	// sort by mod time, ascending order
+	for _, file := range releaseFiles {
+		if !strings.HasPrefix(file, ".") {
+			info, err := os.Stat(file)
+			if err != nil {
+				r.Log.Error(err)
+				continue
+			}
+			filteredFiles = append(filteredFiles, info)
+		}
+	}
+
+	flen := len(filteredFiles)
+	if flen >= 3 { // at least 2-3 versions back from current version
+		sort.SliceStable(filteredFiles, func(i, j int) bool {
+			return filteredFiles[i].ModTime().Unix() < filteredFiles[j].ModTime().Unix()
+		})
+
+		// delete
+		del := func(file, dir string) {
+			if err := os.Remove(file); err != nil {
+				r.Log.Error(err)
+			}
+			if err := os.RemoveAll(dir); err != nil {
+				r.Log.Error(err)
+			}
+		}
+
+		r.Log.Info("remove old files...")
+
+		// remove the last 3
+		for i := 0; i < flen-3; i++ {
+			del(
+				filepath.Join(r.ReleaseDirectory, filteredFiles[i].Name()),
+				filepath.Join(r.ReleaseDirectory, strings.TrimSuffix(filteredFiles[i].Name(), ".release")),
+			)
+		}
+
+		r.Log.Info("done")
 	}
 }
