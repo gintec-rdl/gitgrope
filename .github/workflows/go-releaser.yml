@@ -17,6 +17,10 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - id: lcase
+        uses: ASzc/change-string-case-action@v2
+        with:
+          string: ${{ github.actor }}
       - name: Checkout
         uses: actions/checkout@v2
         with:
@@ -38,10 +42,10 @@ jobs:
 
       - name: Tag the image with current version
         run: |
-          docker tag gitgrope:latest ghcr.io/${{ github.actor }}/gitgrope:${{github.ref_name}}
-          docker tag gitgrope:latest ghcr.io/${{ github.actor }}/gitgrope:latest
+          docker tag gitgrope:latest ghcr.io/${{ steps.lcase.outputs.lowercase }}/gitgrope:${{github.ref_name}}
+          docker tag gitgrope:latest ghcr.io/${{ steps.lcase.outputs.lowercase }}/gitgrope:latest
   
       - name: Push to ghcr.io
         run: |
-          docker push ghcr.io/${{ github.actor }}/gitgrope:${{github.ref_name}}
-          docker push ghcr.io/${{ github.actor }}/gitgrope:latest
+          docker push ghcr.io/${{ steps.lcase.outputs.lowercase }}/gitgrope:${{github.ref_name}}
+          docker push ghcr.io/${{ steps.lcase.outputs.lowercase }}/gitgrope:latest
