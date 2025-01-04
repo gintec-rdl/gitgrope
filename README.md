@@ -77,5 +77,5 @@ Like the binary, it will look for `.grope.yaml` in the current directory.
 To use a different configuration file, do:
 
 ```shell
-docker run --rm --name gitgrope --config-file path/to/.grope.yaml]
+docker run --rm --name gitgrope --config-file path/to/.grope.yaml
 ```
