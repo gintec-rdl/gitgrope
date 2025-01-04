@@ -20,7 +20,7 @@ jobs:
       - id: lcase
         uses: ASzc/change-string-case-action@v2
         with:
-          string: ${{ github.actor }}
+          string: ${{ github.repository_owner }}
       - name: Checkout
         uses: actions/checkout@v2
         with:
