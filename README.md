@@ -62,3 +62,20 @@ gitgrope [-config-file optional/path/to/config/file ]
 ```shell
 gitgrope
 ```
+
+### Docker
+
+Using the image at https://github.com/gintec-rdl/gitgrope/pkgs/container/gitgrope
+
+```shell
+docker pull ghcr.io/gintec-rdl/gitgrope:latest
+docker run --rm --name gitgrope
+```
+
+Like the binary, it will look for `.grope.yaml` in the current directory.
+
+To use a different configuration file, do:
+
+```shell
+docker run --rm --name gitgrope --config-file path/to/.grope.yaml]
+```
